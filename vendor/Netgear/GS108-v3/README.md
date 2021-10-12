@@ -4,11 +4,15 @@ Step by step guide to control this switch via USB.
 
 # How
 
- - 1. Remove the resistor on CPU_EEPROM_SEL(pin 18 of SOC) in order to put the device in SPI mode.
- - 2. Remove the serial configuration EEPROM.
- - 3. The CS, CLK, DI, DO and GND lines of the configuration EEPROM can now be used to hookup a SPI device.
+
+![GS108 V3 modification](/vendor/Netgear/GS108-v3/Netgear%20GS108%20modified.jpg)
+
+
+ 1. Remove the resistor on CPU_EEPROM_SEL(pin 18 of SOC) in order to put the device in SPI mode.
+ 2. Remove the serial configuration EEPROM.
+ 3. The CS, CLK, DI, DO and GND lines of the configuration EEPROM can now be used to hookup a SPI device.
    FT232H or ch341a, for the latter there is an external kernel module that hooks up 
- - 4. Optional: remove the resistor on HW_FWDG_EN (pin 9 of SOC) and pull to GND in order to disable forarding in managed mode.
+ 4. Optional: remove the resistor on HW_FWDG_EN (pin 9 of SOC) and pull to GND in order to disable forarding in managed mode.
 
 # Notes:
  - Datasheet with documentation on the registers can nowadays be found on the web for quite some Broadcom switch chipsets.
