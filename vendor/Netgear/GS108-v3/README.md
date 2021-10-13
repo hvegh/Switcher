@@ -14,6 +14,27 @@ Step by step guide to control this switch via USB.
    FT232H or ch341a, for the latter there is an external kernel module that hooks up 
  4. Optional: remove the resistor on HW_FWDG_EN (pin 9 of SOC) and pull to GND in order to disable forarding in managed mode.
 
+**pins:**
+```
+    93C66A                  FT232H
+
+CS  1     8  3.3v           13  AD0 TCK
+CLK 2     7  nc             14  AD1 DO
+DI  3     6  ORG (nc)       15  AD2 DI
+DO  4     5  GND            16  AD3 CS
+```
+
+**connections:**
+```
+   93C66A       FT232H
+
+    CS    -->    AD3
+    CLK   -->    AD0
+    DI    <--    AD2
+    DO    -->    AD1
+    GND   ---    GND
+```
+
 ## Software
   1. Install the [udev](/src/99-ftdi-udev.conf) rules for the FT232H if needed.
   2. If you want to play around with the rudimentary python test code:
