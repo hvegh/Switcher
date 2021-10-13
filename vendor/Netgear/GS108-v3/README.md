@@ -18,12 +18,10 @@ Step by step guide to control this switch via USB.
   1. Install the [udev](/src/99-ftdi-udev.conf) rules for the FT232H if needed.
   2. If you want to play around with the rudimentary python test code:
       * Install libusb 
-      * Install pyftdi with pip install --user pyftdi
-      * run
-      ```
-      python b53.py
-      ```
-      And expect some output, should work with most Broadcom switch chipsets 
+      * Install pyftdi, example: `pip install --user pyftdi`
+      * run `python b53.py`
+ 
+     And expect some output, should work with most Broadcom switch chipsets.
 
 ## Notes:
  - Datasheet with documentation on the registers can nowadays be found on the web for quite some Broadcom switch chipsets.
