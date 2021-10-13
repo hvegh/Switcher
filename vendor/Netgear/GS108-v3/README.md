@@ -7,14 +7,25 @@ Step by step guide to control this switch via USB.
 
 ![GS108 V3 modification](/vendor/Netgear/GS108-v3/Netgear%20GS108%20modified.jpg)
 
-
+## Hardware modifications
  1. Remove the resistor on CPU_EEPROM_SEL(pin 18 of SOC) in order to put the device in SPI mode.
  2. Remove the serial configuration EEPROM.
  3. The CS, CLK, DI, DO and GND lines of the configuration EEPROM can now be used to hookup a SPI device.
    FT232H or ch341a, for the latter there is an external kernel module that hooks up 
  4. Optional: remove the resistor on HW_FWDG_EN (pin 9 of SOC) and pull to GND in order to disable forarding in managed mode.
 
-# Notes:
+## Software
+  1. Install the [udev](/src/99-ftdi-udev.conf) rules for the FT232H if needed.
+  2. If you want to play around with the rudimentary python test code:
+      * Install libusb 
+      * Install pyftdi with pip install --user pyftdi
+      * run
+      ```
+      python b53.py
+      ```
+      And expect some output, should work with most Broadcom switch chipsets 
+
+## Notes:
  - Datasheet with documentation on the registers can nowadays be found on the web for quite some Broadcom switch chipsets.
    Last time I checked: BCM53118 datasheet is at https://www.mouser.com/datasheet/2/678/broadcom_limited_avgo-s-a0007199329-1-1747631.pdf
  - Most Broadcom switches are supported in Linux by the in-kernel DSA b53 driver.
