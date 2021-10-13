@@ -40,7 +40,7 @@ DO  4     5  GND            16  AD3 CS
   2. If you want to play around with the rudimentary python test code:
       * Install libusb 
       * Install pyftdi, example: `pip install --user pyftdi`
-      * run `python b53.py`
+      * run `python b53.py` from [src](/src)
  
      And expect some output, should work with most Broadcom switch chipsets.
 
