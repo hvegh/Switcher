@@ -5,7 +5,7 @@ Step by step guide to control this switch via USB.
 # How
 
 
-![GS108 V3 modification](/vendor/Netgear/GS108-v3/Netgear%20GS108%20modified.jpg)
+![GS108 V3 modification](Netgear%20GS108%20modified.jpg)
 
 ## Hardware modifications
  1. Remove the resistor on CPU_EEPROM_SEL (pin 18 of SOC) in order to put the device in SPI mode.
@@ -57,3 +57,4 @@ DO  4     5  GND            16  AD3 CS
  - There is also a patchset for a FT232H Linux SPI kernel module:
    - [Mailing List](https://lore.kernel.org/lkml/20190221202506.17744-3-agust@denx.de/)
    - [Denx Source Archive](https://source.denx.de/denx/fpga-cfg)
+ - Please visit [EEPROM Traces](eeprom_traces) if you are interested in the communication with the eeprom.
