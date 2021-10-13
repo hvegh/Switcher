@@ -24,4 +24,6 @@ Step by step guide to control this switch via USB.
    See also https://christian.amsuess.com/idea-incubator/ftdi-kernel-support/ on a deeper discussion.
  - There is an external SPI kernel module for the ch341a here: https://github.com/gschorcht/spi-ch341-usb
    I have ordered a module, in order to see if it works with the DSA driver.
- - There is also a patchset for the FT232H: https://lore.kernel.org/lkml/20190221202506.17744-3-agust@denx.de/
+ - There is also a patchset for a FT232H Linux SPI kernel module:
+   - [Mailing List](https://lore.kernel.org/lkml/20190221202506.17744-3-agust@denx.de/)
+   - [Denx Source Archive](https://source.denx.de/denx/fpga-cfg)
