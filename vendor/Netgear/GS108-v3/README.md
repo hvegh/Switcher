@@ -28,10 +28,10 @@ DO  4     5  GND            16  AD3 CS
 ```
    93C66A       FT232H
 
-    CS    -->    AD3
-    CLK   -->    AD0
-    DI    <--    AD2
-    DO    -->    AD1
+    CS    -->    AD3 CS
+    CLK   -->    AD0 TCK
+    DI    <--    AD1 DO
+    DO    -->    AD2 DI
     GND   ---    GND
 ```
 
