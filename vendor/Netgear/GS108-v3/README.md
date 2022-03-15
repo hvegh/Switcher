@@ -49,7 +49,7 @@ Step by step guide to control this switch via USB.
       * and many others ...
      
   4. TODO patching the [b53_spi](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/net/dsa/b53/b53_spi.c) kernel module.
-   The ultimate goal would be to interact with your device using the standard tools like `ip` and `bridge`.
+   The ultimate goal would be to interact with your device using standard tools like `ip` and `bridge`.
 
 ## Notes:
  - Datasheet with documentation on the registers can nowadays be found on the web for quite some Broadcom switch chipsets.
