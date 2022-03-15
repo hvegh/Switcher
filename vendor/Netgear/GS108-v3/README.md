@@ -42,6 +42,9 @@ Step by step guide to control this switch via USB.
      And expect some output, should work with most Broadcom switch chipsets.
 
 **CH341A based**
+
+**Important note:** Some of those devices have 5v io's which may damage your chip, this can be fixed easy, see [EEVblog](https://www.eevblog.com/forum/repair/ch341a-serial-memory-programmer-power-supply-fix/)
+
   1. Compile and install the out off tree kernel module https://github.com/dimich-dmb/spi-ch341-usb.git
   2. You may need to blacklist the ch341 module in order to prevent it from grabbing your chip, see chapter `Blacklisting` in https://wiki.archlinux.org/title/Kernel_module
   3. Your switch is now exposed via the [SPI userspace API](https://www.kernel.org/doc/html/latest/spi/spidev.html), for which a lot of bindings exist:
