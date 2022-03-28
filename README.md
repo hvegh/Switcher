@@ -1,5 +1,18 @@
 # Switcher
-Collection of notes on managing unmanaged switches
+The goal is to use a slightly modified cheap external switch for fun and profit.
+
+Since discovering the datasheet for the chipset within the my old Netgear 8 ports GB switch I am wondering if it would be possible to use the in for SPI and DSA (Distributed Switch Architecture) modules to control an external, originally unmanaged, switch.
+
+## Why would you want this?
+ * Use off-the-shelf low cost switches for serious traffic management on general purpouse hardware.
+ * Create truly legacy free switching solutions:
+    - Completely integrated within the Linux networking stack. 
+    - Leverage existing kernel code for switch management and control.
+    - Use the standard Linux networking tools for configuration.
+
+This work focus on the use of a 15 Euro Netgear GS108v3 switch in combination with a 4 Euro ch341a USB to SPI adapter:
+
+see link below for details.
 
 ## Models
  - [Netgear GS108-v3 bcm53118 based](/vendor/Netgear/GS108-v3/README.md)
