@@ -10,7 +10,7 @@ Since discovering the datasheet for the chipset within the my old Netgear 8 port
     - Leverage existing kernel code for switch management and control.
     - Use the standard Linux networking tools for configuration.
 
-This work focus on the use of a 15 Euro Netgear GS108v3 switch in combination with a 4 Euro ch341a USB to SPI adapter:
+This work uses a 15 Euro Netgear GS108v3 switch in combination with a 4 Euro ch341a USB to SPI adapter:
 
 see link below for details.
 
