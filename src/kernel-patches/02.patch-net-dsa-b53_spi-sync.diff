@@ -1,0 +1,51 @@
+[PATCH 2/2] net:dsa:b53: Add BCM53118 & fix SPI
+
+dsa: b53: b53_spi.c: replace spi_write_then_read with spi_sync
+
+For the lower level drivers "write then read" does exacltly what is
+expected, it breaks down the transaction into two sepreate transactions.
+At first I was trying to infer the state of the transaction within the
+SPI driver, in order to determine if CS should remain low.
+
+Luckily I realized the folly of my ways. It is undoable at this level
+and should be fixed at the caller.
+
+Using spy_sync fixes this.
+
+Signed-off-by: Henk Vergonet <henk.vergonet@gmail.com>
+
+diff --git a/drivers/net/dsa/b53/b53_spi.c b/drivers/net/dsa/b53/b53_spi.c
+index 403f69b71940..26bf3e26ac9c 100644
+--- a/drivers/net/dsa/b53/b53_spi.c
++++ b/drivers/net/dsa/b53/b53_spi.c
+@@ -42,12 +42,28 @@
+ static inline int b53_spi_read_reg(struct spi_device *spi, u8 reg, u8 *val,
+ 				   unsigned int len)
+ {
+-	u8 txbuf[2];
++	u8 txbuf[10], rxbuf[10]; /* accomodate for u8 (cmd) + u8 (reg) + u64 (val) */
++	struct spi_transfer xfer = {
++		.tx_buf	= txbuf,
++		.rx_buf	= rxbuf,
++		.len	= 2 + len
++	};
++	struct spi_message msg;
++	int ret;
++
++	if(len > sizeof(rxbuf) - 2)
++		return -EOVERFLOW;
+ 
+ 	txbuf[0] = B53_SPI_CMD_NORMAL | B53_SPI_CMD_READ;
+ 	txbuf[1] = reg;
++	*((u64 *)&txbuf[2]) = 0;
+ 
+-	return spi_write_then_read(spi, txbuf, 2, val, len);
++	spi_message_init(&msg);
++	spi_message_add_tail(&xfer, &msg);
++	ret = spi_sync(spi, &msg);
++	if(ret == 0)
++		memcpy(val,rxbuf+2,len);
++	return ret;
+ }
+ 
+ static inline int b53_spi_clear_status(struct spi_device *spi)

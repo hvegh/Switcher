@@ -1,0 +1,120 @@
+[PATCH 1/2] net:dsa:b53: Add BCM53118 & fix SPI
+
+net: dsa: b53: support the BCM53118
+
+The BCM53118 is essentially the BCM53128, which is already supported,
+but without the embedded 8051 microcontroller. The chip is used in in
+various common of the shelf 8 ports gigabit ethernet switch solutions.
+
+These chips can be controlled via SPI/MDC/MDIO interfaces.
+
+Signed-off-by: Henk Vergonet <henk.vergonet@gmail.com>
+
+diff --git a/drivers/net/dsa/b53/Kconfig b/drivers/net/dsa/b53/Kconfig
+index 90b525160b71..99464a5b367d 100644
+--- a/drivers/net/dsa/b53/Kconfig
++++ b/drivers/net/dsa/b53/Kconfig
+@@ -7,8 +7,8 @@ menuconfig B53
+ 	select NET_DSA_TAG_BRCM_PREPEND
+ 	help
+ 	  This driver adds support for Broadcom managed switch chips. It supports
+-	  BCM5325E, BCM5365, BCM539x, BCM53115 and BCM53125 as well as BCM63XX
+-	  integrated switches.
++	  BCM5325E, BCM5365, BCM539x, BCM53115, BCM53125 and BCM531x8 as well as
++	  BCM63XX integrated switches.
+ 
+ config B53_SPI_DRIVER
+ 	tristate "B53 SPI connected switch driver"
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 77501f9c5915..d4768b60670f 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -2406,6 +2406,19 @@ static const struct b53_chip_data b53_switch_chips[] = {
+ 		.jumbo_pm_reg = B53_JUMBO_PORT_MASK,
+ 		.jumbo_size_reg = B53_JUMBO_MAX_SIZE,
+ 	},
++	{
++		.chip_id = BCM53118_DEVICE_ID,
++		.dev_name = "BCM53118",
++		.vlans = 4096,
++		.enabled_ports = 0x1ff,
++		.arl_bins = 4,
++		.arl_buckets = 1024,
++		.imp_port = 8,
++		.vta_regs = B53_VTA_REGS,
++		.duplex_reg = B53_DUPLEX_STAT_GE,
++		.jumbo_pm_reg = B53_JUMBO_PORT_MASK,
++		.jumbo_size_reg = B53_JUMBO_MAX_SIZE,
++	},
+ 	{
+ 		.chip_id = BCM53125_DEVICE_ID,
+ 		.dev_name = "BCM53125",
+@@ -2746,6 +2759,7 @@ int b53_switch_detect(struct b53_device *dev)
+ 
+ 		switch (id32) {
+ 		case BCM53115_DEVICE_ID:
++		case BCM53118_DEVICE_ID:
+ 		case BCM53125_DEVICE_ID:
+ 		case BCM53128_DEVICE_ID:
+ 		case BCM53010_DEVICE_ID:
+diff --git a/drivers/net/dsa/b53/b53_mdio.c b/drivers/net/dsa/b53/b53_mdio.c
+index a7aeb3c132c9..48b7d6483aad 100644
+--- a/drivers/net/dsa/b53/b53_mdio.c
++++ b/drivers/net/dsa/b53/b53_mdio.c
+@@ -306,7 +306,7 @@ static int b53_mdio_probe(struct mdio_device *mdiodev)
+ 	phy_id = mdiobus_read(mdiodev->bus, 0, 2) << 16;
+ 	phy_id |= mdiobus_read(mdiodev->bus, 0, 3);
+ 
+-	/* BCM5325, BCM539x (OUI_1)
++	/* BCM5325, BCM539x, BCM53118 (OUI_1)
+ 	 * BCM53125, BCM53128 (OUI_2)
+ 	 * BCM5365 (OUI_3)
+ 	 */
+@@ -375,6 +375,7 @@ static void b53_mdio_shutdown(struct mdio_device *mdiodev)
+ static const struct of_device_id b53_of_match[] = {
+ 	{ .compatible = "brcm,bcm5325" },
+ 	{ .compatible = "brcm,bcm53115" },
++	{ .compatible = "brcm,bcm53118" },
+ 	{ .compatible = "brcm,bcm53125" },
+ 	{ .compatible = "brcm,bcm53128" },
+ 	{ .compatible = "brcm,bcm5365" },
+diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
+index 3085b6cc7d40..b2c0bcdc9224 100644
+--- a/drivers/net/dsa/b53/b53_priv.h
++++ b/drivers/net/dsa/b53/b53_priv.h
+@@ -71,6 +71,7 @@ enum {
+ 	BCM5397_DEVICE_ID = 0x97,
+ 	BCM5398_DEVICE_ID = 0x98,
+ 	BCM53115_DEVICE_ID = 0x53115,
++	BCM53118_DEVICE_ID = 0x53118,
+ 	BCM53125_DEVICE_ID = 0x53125,
+ 	BCM53128_DEVICE_ID = 0x53128,
+ 	BCM63XX_DEVICE_ID = 0x6300,
+@@ -180,6 +181,7 @@ static inline int is539x(struct b53_device *dev)
+ static inline int is531x5(struct b53_device *dev)
+ {
+ 	return dev->chip_id == BCM53115_DEVICE_ID ||
++		dev->chip_id == BCM53118_DEVICE_ID ||
+ 		dev->chip_id == BCM53125_DEVICE_ID ||
+ 		dev->chip_id == BCM53128_DEVICE_ID;
+ }
+diff --git a/drivers/net/dsa/b53/b53_spi.c b/drivers/net/dsa/b53/b53_spi.c
+index 0e54b2a0c211..403f69b71940 100644
+--- a/drivers/net/dsa/b53/b53_spi.c
++++ b/drivers/net/dsa/b53/b53_spi.c
+@@ -341,6 +341,7 @@ static const struct of_device_id b53_spi_of_match[] = {
+ 	{ .compatible = "brcm,bcm5397" },
+ 	{ .compatible = "brcm,bcm5398" },
+ 	{ .compatible = "brcm,bcm53115" },
++	{ .compatible = "brcm,bcm53118" },
+ 	{ .compatible = "brcm,bcm53125" },
+ 	{ .compatible = "brcm,bcm53128" },
+ 	{ /* sentinel */ }
+@@ -354,6 +355,7 @@ static const struct spi_device_id b53_spi_ids[] = {
+ 	{ .name = "bcm5397" },
+ 	{ .name = "bcm5398" },
+ 	{ .name = "bcm53115" },
++	{ .name = "bcm53118" },
+ 	{ .name = "bcm53125" },
+ 	{ .name = "bcm53128" },
+ 	{ /* sentinel */ }
