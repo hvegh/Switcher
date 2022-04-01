@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#
 # Licence: GPL V3 or higher
 #
 import time
