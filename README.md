@@ -110,6 +110,7 @@ In the end it would be nice to use the regular DSA drivers together with the reg
 
 
 [[PATCH 1/2] net:dsa:b53: Add BCM53118 & fix SPI](src/kernel-patches/01.patch-net-dsa-b53_add-bcm53118.diff)
+
 [[PATCH 2/2] net:dsa:b53: Add BCM53118 & fix SPI](src/kernel-patches/02.patch-net-dsa-b53_spi-sync.diff)
 
 With these patches the DSA b53 code detects the switch:
